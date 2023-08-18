@@ -1,7 +1,7 @@
 "use client";
 import Stream from '../../components/stream/Stream'
 import Head from "next/head";
-import Table from "../../components/graph/graph3";
+// import Table from "../../components/graph/graph3";
 import {useState} from 'react'
 
 
@@ -20,7 +20,7 @@ export default function Home() {
       <Stream setNewNodes={setNewNodes} setNewEdges={setNewEdges} />
       <div className=""></div>
       <div className="w-full h-full mx-auto md:w-full sm:w-full">
-        <Table newNodes={newNodes} newEdges={newEdges}/>
+        {/* <Table newNodes={newNodes} newEdges={newEdges}/> */}
       </div>
     </div>
   );
