@@ -1,0 +1,4 @@
+words should only split at bottom when scrolling down.
+and they should come together when scrolling up 
+
+so i JUST NEED TO remove the break apart when scroll up
