@@ -1,5 +1,30 @@
+// // import React, { useCallback, memo } from 'react';
+// // import { Handle } from 'reactflow';
+
+// // const CustomNode = ({ id, data, selected }) => {
+// //   const handleClick = useCallback(async () => {
+// //     console.log(`Node ${id} was clicked!`);
+
+// //     // Fetch data from an API
+// //     const response = await fetch('<URL>');
+// //     const data = await response.json();
+// //     console.log(data);
+// //   }, [id]);
+
+// //   return (
+// //     <div onClick={handleClick}>
+// //       <Handle type="target" position="top" />
+// //       <div>{data.label}</div>
+// //       <Handle type="source" position="bottom" />
+// //     </div>
+// //   );
+// // };
+
+// // export default memo(CustomNode);
+
+
 // import React, { useCallback, memo } from 'react';
-// import { Handle } from 'reactflow';
+// import { Handle, useStoreState } from 'reactflow';
 
 // const CustomNode = ({ id, data, selected }) => {
 //   const handleClick = useCallback(async () => {
@@ -11,11 +36,18 @@
 //     console.log(data);
 //   }, [id]);
 
+//   const isDragging = useStoreState((store) => store.nodesDraggable);
+
 //   return (
-//     <div onClick={handleClick}>
-//       <Handle type="target" position="top" />
+//     <div
+//       onClick={handleClick}
+//       className={`p-2 rounded-md bg-white shadow-md ${
+//         isDragging ? 'cursor-move' : ''
+//       }`}
+//     >
+//       <Handle type="target" position="top" style={{ height: '10px', width: '10px', backgroundColor: '#000' }} />
 //       <div>{data.label}</div>
-//       <Handle type="source" position="bottom" />
+//       <Handle type="source" position="bottom" style={{ height: '10px', width: '10px', backgroundColor: '#000' }} />
 //     </div>
 //   );
 // };
@@ -24,7 +56,7 @@
 
 
 import React, { useCallback, memo } from 'react';
-import { Handle, useStoreState } from 'reactflow';
+import { Handle, useStore } from 'reactflow';
 
 const CustomNode = ({ id, data, selected }) => {
   const handleClick = useCallback(async () => {
@@ -36,15 +68,17 @@ const CustomNode = ({ id, data, selected }) => {
     console.log(data);
   }, [id]);
 
-  const isDragging = useStoreState((store) => store.nodesDraggable);
-
+  const store = useStore();
+  const isDragging = store //.getState().nodesDraggable;
+  console.log("isDragging", isDragging)
   return (
     <div
       onClick={handleClick}
-      className={`p-2 rounded-md bg-white shadow-md ${
-        isDragging ? 'cursor-move' : ''
-      }`}
+      className={`p-5 rounded-md bg-blue-300 shadow-md
+        `
+    }
     >
+      
       <Handle type="target" position="top" style={{ height: '10px', width: '10px', backgroundColor: '#000' }} />
       <div>{data.label}</div>
       <Handle type="source" position="bottom" style={{ height: '10px', width: '10px', backgroundColor: '#000' }} />

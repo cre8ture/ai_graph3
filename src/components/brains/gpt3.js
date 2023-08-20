@@ -21,7 +21,6 @@ const prompt_main = `create a React Flow graph that is a flow chart for the text
 
 export async function gpt3(prompt) {
     const input = 'text: ' + prompt + ` \n` + prompt_main;
-    console.log("key", key)
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -47,7 +46,7 @@ export async function gpt3(prompt) {
 
     const data = await response.json();
 
-    console.log("i am thinking...", data)
+    // console.log("i am thinking...", data)
     // console.log("DATA,", data, data.choices[0].message.content)//.message.content)
     return data.choices[0].message.content//.message.content;
 }

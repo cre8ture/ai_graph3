@@ -3,6 +3,41 @@ import ClickableNode from "./node_types/Clickable";
 import Project_node_norm from "./node_types/Clickable";
 
 
+
+const ininodes = [
+  {
+    id: '1',
+    type: 'Clickable',
+    data: {
+      label: 'key idea 1',
+      id: '1'
+    },
+    position: { x: 100, y: 100 },
+  },
+  // ...
+  {
+    id: 'n',
+    type: 'Clickable',
+    data: {
+      label: 'key idea n',
+      id: 'n'
+    },
+    position: { x:  3 * 100, y: 100 },
+  }
+];
+
+const iniedges = [
+  {
+    id: 'e1-2',
+    source: '1',
+    target: 'n',
+    label: 'describe the relationship between source "1" and target "2"'
+  },
+  
+];
+
+
+
 // import CustomControls from "./controls/Controls";
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import ReactFlow, {
@@ -38,14 +73,14 @@ const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdge
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [flowStyle, setFlowStyle] = useState({ background: backgroundColor });
 
-  console.log("backgroundColor", backgroundColor);
+  // console.log("backgroundColor", backgroundColor);
   useEffect(() => {
     setFlowStyle({ background: backgroundColor });
   }, [backgroundColor]);
 
   //   const onInit = (instance) => setReactFlowInstance(instance);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([...ininodes]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([...iniedges]);
 
   useEffect(()=>{
     setNodes(newNodes)
@@ -104,7 +139,7 @@ const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdge
           x: event.clientX - left,
           y: event.clientY - top,
         });
-        console.log("i am position", position);
+        // console.log("i am position", position);
         const newNode = {
           id: event.timeStamp.toString(),
           // type: "default",
