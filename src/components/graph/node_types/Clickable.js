@@ -69,15 +69,12 @@ const CustomNode = ({ id, data, selected }) => {
   }, [id]);
 
   const store = useStore();
-  const isDragging = store //.getState().nodesDraggable;
-  console.log("isDragging", isDragging)
+  const isDragging = store //.getState().nodesDraggable; // i need to understand what this contains 
+  console.log("isDragging", isDragging, "poop" , isDragging.getNodes())
   return (
     <div
       onClick={handleClick}
-      className={`p-5 rounded-md bg-blue-300 shadow-md
-        `
-    }
-    >
+      className={`p-5 rounded-md bg-blue-300 shadow-md transition-colors duration-300 hover:bg-blue-500 hover:scale-110 focus:bg-blue-700`}   >
       
       <Handle type="target" position="top" style={{ height: '10px', width: '10px', backgroundColor: '#000' }} />
       <div>{data.label}</div>

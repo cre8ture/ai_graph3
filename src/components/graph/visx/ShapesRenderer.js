@@ -4,7 +4,11 @@ import ParentSize from "@visx/responsive/lib/components/ParentSize";
 
 import Example from "./Shapes";
 
-export default function RenderLine({ backgroundColor, isHovered, randomizeColor, handleSubmit }) {
+import {Loading} from '../../loading/Loading'
+
+export default function RenderLine({ backgroundColor, isHovered, randomizeColor, handleSubmit, isLoading}) {
+
+  console.log("i is in renderer", isLoading)
   return (
     <div style={{ width: 300, height: 80 }}>
       <ParentSize>
@@ -16,6 +20,7 @@ export default function RenderLine({ backgroundColor, isHovered, randomizeColor,
             height={height}
             isHovered={isHovered}
             randomizeColor={randomizeColor}
+            isLoading={isLoading}
           />
         )}
       </ParentSize>

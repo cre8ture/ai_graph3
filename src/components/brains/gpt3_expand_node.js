@@ -1,5 +1,7 @@
 const key = process.env.NEXT_PUBLIC_OPENAI_KEY 
-const prompt_main = `create a React Flow graph that is a flow chart for the text above where nodes represent key ideas outputted as const nodes =  [{
+
+export async function gpt3_expand_node(prompt, x_val, original_prompt) {
+  const prompt_main = `create a React Flow graph that is a flow chart for the text above where nodes represent key ideas outputted as const nodes =  [{
     id:'1',
     type: 'Clickable',
     data: {
@@ -19,8 +21,8 @@ const prompt_main = `create a React Flow graph that is a flow chart for the text
   { id: 'e1-2', source: '1', target: '2', label: 'describe the relationship bewteen source '1' and target '2' },
   { id: 'e1-3', source: 'n-1', target: 'n', animated: true }, where animated: true is based on the logic of the relationship. The label logically describes the relationship between nodes. Ensure each node is at least 300 pixels apart along x axis and alternative 0 and 100 on the y axis.  Output only pure code in your response; nothing else.`;
 
-export async function gpt3(prompt) {
-    const input = 'text: ' + prompt + ` \n` + prompt_main;
+
+    const input = `text: In the context of this original ${original_prompt}, describe in detail this particular step: ` + prompt + ` \n` + prompt_main;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',

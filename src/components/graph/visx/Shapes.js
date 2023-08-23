@@ -132,11 +132,12 @@
 // };
 
 // export default PolygonComponent;
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Polygon } from "@visx/shape";
 import { Group } from "@visx/group";
 import { scaleBand } from "@visx/scale";
 import { GradientPinkRed } from "@visx/gradient";
+import {Loading} from '../../loading/Loading'
 
 var background = "#7f82e3";
 const polygonSize = 25;
@@ -191,15 +192,43 @@ const PolygonComponent = ({
   isHovered,
   randomizeColor,
   handleSubmit,
+  isLoading,
 }) => {
+  const [fillColorSquare, setFillColorSquare] = useState("rgb(229, 253, 61)");
+  const [showLoading, setShowLoading] = useState(false);
+
+  useEffect(() => {
+    // Show the loading icon after a delay
+    var timeoutId = ''
+    if(isLoading){
+     timeoutId = setTimeout(() => {
+      setShowLoading(true);
+    }, 250);
+}
+else{
+  setShowLoading(false)
+}
+    // Clear the timeout when the component unmounts
+    return () => {
+      clearTimeout();
+    };
+  }, [isLoading]);
+
+
+  // console.log("I am in shapes", isLoading)
+
   function triangleClick(a) {
-    console.log("COLOR", a);
     randomizeColor();
   }
 
   async function squareClick(e) {
     // e.preventDefault();
+    const origColor = "rgb(229, 253, 61)"
     console.log(e)
+    setTimeout(() => {
+      setFillColorSquare('green');
+    }, 100);
+    setFillColorSquare(origColor)
     handleSubmit()
   }
 
@@ -213,13 +242,15 @@ const PolygonComponent = ({
       fill: "rgb(174, 238, 248)",
       rotate: 90,
       offset: 6,
+      className: 'triangle',
       onClick: () => triangleClick("Triangle clicked!"),
     },
     {
       sides: 4,
-      fill: "rgb(229, 253, 61)",
+      fill: fillColorSquare,//"rgb(229, 253, 61)",
       rotate: 45,
       offset: 0,
+      className: 'square' ,
       onClick: () => squareClick("Square clicked!"),
     },
     {
@@ -227,6 +258,7 @@ const PolygonComponent = ({
       fill: "rgb(229, 130, 255)",
       rotate: 0,
       offset: 0,
+      className: 'hexagon',
       onClick: () => console.log("Hexagon clicked!"),
     },
   ];
@@ -270,7 +302,7 @@ const PolygonComponent = ({
             // Set the left property based on xScale
             left={(xScale(i) || 0) + polygonSize / 2}
           >
-            <Polygon
+            {i != 1 ? <Polygon
               sides={polygon.sides}
               size={polygonSize}
               // Use state for the fill color of the triangle
@@ -286,7 +318,41 @@ const PolygonComponent = ({
                 transition:
                   isHovered || i === 0 ? "opacity 1.5s" : "opacity 1.5s",
               }}
+            />: (
+
+              !showLoading ? 
+              <Polygon
+              sides={polygon.sides}
+              size={polygonSize}
+              fill={polygon.fill}
+              rotate={polygon.rotate}
+              className={`polygon polygon-${i}`}
+              onClick={polygon.onClick}
+              onMouseEnter={i === 0 ? handleMouseEnter : undefined}
+              onMouseLeave={i === 0 ? handleMouseLeave : undefined}
+              style={{
+                opacity: isHovered || i === 0 ? 1 : 0,
+                transition: isHovered || i === 0 ? "opacity 1.5s" : "opacity 1.5s",
+                pointerEvents: showLoading ? "none" : "auto", // Disable mouse events when loading
+              }}
             />
+            :
+            (
+              <foreignObject
+  style={{
+    zIndex: 100,
+  }}
+  width={polygonSize}
+  height={polygonSize}
+  x={-polygonSize / 2}
+  y={-polygonSize / 2}
+>
+  <Loading />
+</foreignObject>
+
+           )
+            )}
+            
           </Group>
         ))}
       </svg>

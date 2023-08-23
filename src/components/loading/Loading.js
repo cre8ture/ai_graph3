@@ -6,14 +6,26 @@ import loading from 'react-useanimations/lib/loading'
 
 export const Loading = () => {
   return (
-    <UseAnimations animation={loading2} size={56} />
+    <div>
+    <UseAnimations animation={loading2} size={25} />
+    </div>
   )
 };
+
+export const Simple_loading = () => {
+  return (
+    <div>
+<p>Loading ... </p>    
+</div>
+  )}
 
 
 export const Loading_circle = () => {
     return (
+      <div>
       <UseAnimations animation={loading} size={56} />
+      
+</div>
     )
   };
   

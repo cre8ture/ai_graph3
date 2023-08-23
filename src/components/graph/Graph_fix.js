@@ -79,8 +79,8 @@ const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdge
   }, [backgroundColor]);
 
   //   const onInit = (instance) => setReactFlowInstance(instance);
-  const [nodes, setNodes, onNodesChange] = useNodesState([...ininodes]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([...iniedges]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(()=>{
     setNodes(newNodes)

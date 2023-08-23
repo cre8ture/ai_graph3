@@ -2,6 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "../components/menus/Navbar";
+import {Suspense} from 'react'
+import {Simple_loading} from '../components/loading/Loading'
+// import GoogleAnalytics from "@/components/google/GoogleAnalytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,12 +17,16 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
+  
 }) {
   return (
     <html lang="en">
+        {/* <GoogleAnalytics GA_TRACKING_ID={process.env.GA_TRACKING_ID} /> */}
       <body className={inter.className}>
         <Navbar />
+        <Suspense fallback={<Simple_loading/>}>
         {children}
+        </Suspense>
       </body>
     </html>
   );
