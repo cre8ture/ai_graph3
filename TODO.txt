@@ -1,4 +1,3 @@
-words should only split at bottom when scrolling down.
-and they should come together when scrolling up 
-
-so i JUST NEED TO remove the break apart when scroll up
+TO DO fix clickavke so that it will expand veritcally the nodes when clicked...
+need to ensure it works
+parse code from string to code.

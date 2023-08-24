@@ -55,22 +55,41 @@
 // export default memo(CustomNode);
 
 
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, memo, useState } from 'react';
 import { Handle, useStore } from 'reactflow';
+import {gpt3_expand_node} from '../../brains/gpt3_expand_node'
 
 const CustomNode = ({ id, data, selected }) => {
+  const [clicked, setClicked] = useState(false)
+
+  
+  const store = useStore();
+  const isDragging = store //.getState().nodesDraggable; // i need to understand what this contains 
+  console.log("cs", isDragging, "poop" , isDragging.getNodes())
+  const nodes = isDragging.getNodes()
+  // const nodes = store.getState().getNodes();
+  const node = nodes.find((node) => node.id === id);
+  console.log("i is node", node)
+
+  const label = node.data.label
+  const posX = node.position.x
+  const posY = node.position.y
+
   const handleClick = useCallback(async () => {
+
     console.log(`Node ${id} was clicked!`);
 
     // Fetch data from an API
-    const response = await fetch('<URL>');
+    if(!clicked){
+    const response = await gpt3_expand_node(label, posX, posY)
     const data = await response.json();
     console.log(data);
+    setClicked(true)
+}
+
   }, [id]);
 
-  const store = useStore();
-  const isDragging = store //.getState().nodesDraggable; // i need to understand what this contains 
-  console.log("isDragging", isDragging, "poop" , isDragging.getNodes())
+  
   return (
     <div
       onClick={handleClick}
