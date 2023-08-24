@@ -8,7 +8,7 @@ export async function gpt3_expand_node(prompt, x_val, y_val) {
       label: 'key idea 1',
       id:'1'
     },
-    position: { x: 100, y: 100 },
+    position: { x: ${x_val}, y: ${y_val} },
   },... ,{
     id: 'n',
     type: 'Clickable',

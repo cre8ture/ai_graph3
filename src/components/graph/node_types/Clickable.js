@@ -58,6 +58,8 @@
 import React, { useCallback, memo, useState } from 'react';
 import { Handle, useStore } from 'reactflow';
 import {gpt3_expand_node} from '../../brains/gpt3_expand_node'
+import {build_graph_from_output} from '../../brains/gpt3_expand_node'
+
 
 const CustomNode = ({ id, data, selected }) => {
   const [clicked, setClicked] = useState(false)
@@ -83,7 +85,8 @@ const CustomNode = ({ id, data, selected }) => {
     if(!clicked){
     const response = await gpt3_expand_node(label, posX, posY)
     const data = await response.json();
-    console.log(data);
+    console.log(data);  
+    build_graph_from_output(data)
     setClicked(true)
 }
 
