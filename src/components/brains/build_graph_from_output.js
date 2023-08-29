@@ -34,6 +34,6 @@ export async function build_graph_from_output(response) {
 
       return {
         "nodes": nodes,
-        "edges: edges
+        "edges": edges,
       }
     }

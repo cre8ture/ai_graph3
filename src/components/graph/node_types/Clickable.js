@@ -58,20 +58,23 @@
 import React, { useCallback, memo, useState } from 'react';
 import { Handle, useStore } from 'reactflow';
 import {gpt3_expand_node} from '../../brains/gpt3_expand_node'
-import {build_graph_from_output} from '../../brains/gpt3_expand_node'
+import {build_graph_from_output} from '../../brains/build_graph_from_output'
+import {Loading} from '../../loading/Loading'
 
 
 const CustomNode = ({ id, data, selected }) => {
   const [clicked, setClicked] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
 
   
   const store = useStore();
   const isDragging = store //.getState().nodesDraggable; // i need to understand what this contains 
-  console.log("cs", isDragging, "poop" , isDragging.getNodes())
+  // console.log("cs", isDragging, "poop" , isDragging.getNodes())
   const nodes = isDragging.getNodes()
   // const nodes = store.getState().getNodes();
   const node = nodes.find((node) => node.id === id);
-  console.log("i is node", node)
+  // console.log("i is node", node)
 
   const label = node.data.label
   const posX = node.position.x
@@ -83,11 +86,15 @@ const CustomNode = ({ id, data, selected }) => {
 
     // Fetch data from an API
     if(!clicked){
+    setIsLoading(true)
+    console.log("i am clicked and inside clicker")
     const response = await gpt3_expand_node(label, posX, posY)
     const data = await response.json();
     console.log(data);  
-    build_graph_from_output(data)
+    const graphData = await build_graph_from_output(data)
     setClicked(true)
+    console.log("i am graphData", graphData)
+    setIsLoading(false)
 }
 
   }, [id]);

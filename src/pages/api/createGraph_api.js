@@ -25,19 +25,19 @@ const prompt_main = `create a React Flow graph that is a flow chart for the text
   { id: 'e1-2', source: '1', target: '2', label: 'describe the relationship bewteen source '1' and target '2' },
   { id: 'e1-3', source: 'n-1', target: 'n', animated: true }, where anmated : true is based on the logic of the relationship. Ensure each node is at least 300 pixels apart. Only output the code in your response.`
 
-const OPENAI_API_KEY = process.env.OPENAI_KEY;
+const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_KEY;
 
 
 // const OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY'; // Replace with your own API key
 // const prompt = 'Your prompt here';
 
-const key = "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"
+const key = OPENAI_API_KEY 
 async function fetchGPT3(prompt) {
     const response = await fetch('https://api.openai.com/v1/engines/davinci/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
         prompt: prompt,
@@ -55,7 +55,7 @@ async function fetchGPT3(prompt) {
 // const chat = new ChatOpenAI({ 
 //   modelName: "gpt-4", 
 //   temperature: 0.9,
-//   apiKey: "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" // Place your OpenAI key here
+//   apiKey: ""
 // });
 
 // const executor = await initializeAgentExecutorWithOptions([], chat, {

@@ -1,31 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Graph - Automated Diagram Generation using LLMs
+
+ AI Graph, a project that harnesses the power of Large Language Models (LLMs) to create informative and visually appealing diagrams. This innovative tool is designed to generate diagrams that visualize various processes, making it easier for users to understand and learn complex concepts.
+
+## About AI Graph
+
+AI Graph employs the capabilities of LLMs to analyze and comprehend processes outlined in textual descriptions. It then transforms this information into interactive diagrams that depict the steps involved in a process. Whether you're learning the process of obtaining a derivative, mastering coding techniques, or diving into any step-by-step procedure, AI Graph can assist by providing clear visual representations.
+
+## Technology Stack
+
+The AI Graph project is built using a range of modern technologies that ensure a seamless and dynamic user experience:
+
+- **TypeScript:** The project is developed using TypeScript, a statically-typed superset of JavaScript that enhances code maintainability and readability.
+
+- **Next.js:** This popular React framework powers the web application, enabling efficient rendering and client-side routing.
+
+- **React Flow:** AI Graph utilizes React Flow, a library for building interactive node-based diagrams. This allows for the creation of dynamic and visually appealing diagrams.
+
+- **Lanchain:** Lanchain technology is integrated to facilitate secure communication within the app, safeguarding sensitive data and interactions.
 
 ## Getting Started
 
-First, run the development server:
+To get started with AI Graph, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+1. Clone this repository to your local machine.
+2. Navigate to the project directory and install dependencies using `npm install`.
+3. Create a file named `.env.local` in the root directory.
+4. Add your OpenAI API key to the `.env.local` file as follows:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```plaintext
+   OPENAI_API_KEY=your_api_key_here
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   Replace `your_api_key_here` with your actual OpenAI API key.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+5. Start the development server using `npm run dev`.
 
-## Learn More
+You're now ready to explore and use the AI Graph project to generate informative diagrams!
 
-To learn more about Next.js, take a look at the following resources:
+## Note
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Please be aware that while AI Graph can generate diagrams based on textual descriptions, it might not always accurately represent complex processes. The diagrams generated are for illustrative and educational purposes and should not be considered as professional advice.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Remember to consult reliable sources and experts for accurate information and guidance related to specific processes.
+
+Thank you for your interest in AI Graph! We hope this project enhances your learning experience and provides you with valuable insights into various processes through visually engaging diagrams.
 
 ## Deploy on Vercel
 

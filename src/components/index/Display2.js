@@ -6,6 +6,8 @@ import Lines from "../graph/visx/ShapesRenderer";
 import { gpt3 } from '../brains/gpt3'
 import * as acorn from 'acorn';
 
+import Warning from '../tooltips/Tooltips2'
+
 const GraphWithPdfInputOverlay = ({
   getText,
   getHighlightedText,
@@ -19,6 +21,8 @@ const GraphWithPdfInputOverlay = ({
   const [output, setOutput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [graphCount, setGraphCount] = useState(0)
+  const [toolTipWarning, setToolTipWarning] = useState('')
+
 
 
   const buttonRef = useRef(null);
@@ -61,9 +65,13 @@ const GraphWithPdfInputOverlay = ({
   const handleSubmit = async () => {
 
     if (inputText.length < 3) {
+      setToolTipWarning('error: not enough input. Try writing a full word or sentence')
       return 'error: not enough input. Try writing a full word or sentence'
     }
     setIsLoading(true)
+
+    sessionStorage.setItem("ai_graph_input", inputText);
+
 
     // setGraphCount(prevCount => {prevCount += 1})
     const inputValue = inputText
@@ -106,6 +114,7 @@ const GraphWithPdfInputOverlay = ({
 
     } catch (error) {
       console.error('Error:', error);
+      setToolTipWarning('ERROR: ' + error)
     }
   };
 
@@ -119,6 +128,7 @@ const GraphWithPdfInputOverlay = ({
         height: "100%",
       }}
     >
+      <Warning text={toolTipWarning}/>
       <div
         style={{
           position: "relative",
@@ -129,7 +139,7 @@ const GraphWithPdfInputOverlay = ({
 
         <div className="flex flex-col" style={{ width: "300px" }}>
           <div className="flex">
-          <Input className="mt-3 ml-3" setInputText={setInputText} setIsHovered={setIsHovered} />
+          <Input className="mt-3 ml-3" isLoading={isLoading} setInputText={setInputText} setIsHovered={setIsHovered} />
           </div>
           <Lines
             backgroundColor={backgroundColor}

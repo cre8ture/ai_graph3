@@ -1,90 +1,7 @@
-// import React, { useState, useEffect } from "react";
-// import Graph from "../graph/Graph_fix";
-// import RandomButton from "../buttons/RandomButton";
-
-// const GraphWithPdfInputOverlay = ({
-//   getText,
-//   getHighlightedText,
-//   getIsHighlightedText,
-// }) => {
-//   const [backgroundColor, setBackgroundColor] = useState("#ffff99");
-//   const [hoverColor, setHoverColor] = useState("#fff999");
-
-//   console.log("hoverColor", hoverColor);
-//   const randomizeColor = () => {
-//     // Generate a random color and update the state
-//     const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-//     // setBackgroundColor(randomColor);
-//     return randomColor;
-//   };
-
-//   function handleClickColor() {
-//     setBackgroundColor(randomizeColor);
-//   }
-//   function handleHoverColor() {
-//     setHoverColor(randomizeColor);
-//   }
-
-//   return (
-//     <div
-//       style={{
-//         backgroundColor: backgroundColor,
-//         width: "100%",
-//         height: "100%",
-//       }}
-//     >
-//       <div
-//         style={{
-//           position: "relative",
-//           height: "100%",
-//           backgroundColor: "transparent",
-//         }}
-//       >
-//         <button
-//           className={`bg-transparent mt-3 hover:bg-${hoverColor} text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded`}
-//           onClick={handleClickColor}
-//           onMouseEnter={handleHoverColor}
-//           style={{ padding: "10px", fontSize: "20px" }} // color: hoverColor }}
-//         >
-//           Randomize Color
-//         </button>
-//         {/* <RandomButton /> */}
-//         {/* Graph component */}
-//         <div
-//           style={{
-//             position: "absolute",
-//             // top: 100, // Adjust the top offset here
-//             // left: 0,
-//             // width: "80%",
-//             backgroundColor: "transparent",
-//             height: `calc(100% - 25%)`, // Adjust the offset and subtract from total height
-//             zIndex: 20,
-//           }}
-//         >
-//           <Graph
-//             backgroundColor={backgroundColor}
-//             // Pass required props to the Graph component
-//             style={
-//               {
-//                 // Adjust styles as needed
-//                 // width: "100%",
-//               }
-//             }
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default GraphWithPdfInputOverlay;
-
 import React, { useState, useEffect, useRef } from "react";
 import Graph from "../graph/Graph_fix";
-// import RandomButton from "../buttons/RandomButton";
 import Input from "../input/Input";
-// import ChoiceButtons from "../buttons/ChoiceButtons";
-// import Lines from "../graph/visx/LineRenderer";
+
 import Lines from "../graph/visx/ShapesRenderer";
 import { gpt3 } from '../brains/gpt3'
 import Loading from '../loading/Loading'
@@ -101,7 +18,7 @@ const GraphWithPdfInputOverlay = ({
   const [newEdges, setNewEdges] = useState([])
   const [inputText, setInputText] = useState('')
   const [output, setOutput] = useState('')
-const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [graphCount, setGraphCount] = useState(0)
 
 
@@ -142,13 +59,13 @@ const [isLoading, setIsLoading] = useState(false)
 
 
 
-  
+
   const handleSubmit = async () => {
 
-    if(inputText.length < 3)
-    {
+    if (inputText.length < 3) {
       return 'error: not enough input. Try writing a full word or sentence'
     }
+    setIsLoading(true)
 
     // setGraphCount(prevCount => {prevCount += 1})
     const inputValue = inputText
@@ -156,51 +73,45 @@ const [isLoading, setIsLoading] = useState(false)
 
 
     try {
-        console.log("in")
-        // Send a POST request to the API endpoint with the input data
-        const response = await gpt3(inputValue)
+      console.log("in")
+      const response = await gpt3(inputValue)
 
+      setOutput(await response.toString());
 
-        // console.log("response", response)
+      const ast = acorn.parse(response, { ecmaVersion: 'latest' });
+      const nodesDeclaration = ast.body.find(node => node.type === 'VariableDeclaration' && node.declarations[0].id.name === 'nodes');
+      const edgesDeclaration = ast.body.find(node => node.type === 'VariableDeclaration' && node.declarations[0].id.name === 'edges');
 
-
-        // Set the output state with the response data
-        setOutput(await response.toString());
-
-        // eval(response.toString());
-
-        const ast = acorn.parse(response, { ecmaVersion: 'latest' });
-        const nodesDeclaration = ast.body.find(node => node.type === 'VariableDeclaration' && node.declarations[0].id.name === 'nodes');
-        const edgesDeclaration = ast.body.find(node => node.type === 'VariableDeclaration' && node.declarations[0].id.name === 'edges');
-        
-        function reconstructObject(node) {
-          if (node.type === 'ObjectExpression') {
-            const obj = {};
-            for (const property of node.properties) {
-              obj[property.key.name] = reconstructObject(property.value);
-            }
-            return obj;
-          } else if (node.type === 'ArrayExpression') {
-            return node.elements.map(element => reconstructObject(element));
-          } else if (node.type === 'Literal') {
-            return node.value;
+      function reconstructObject(node) {
+        if (node.type === 'ObjectExpression') {
+          const obj = {};
+          for (const property of node.properties) {
+            obj[property.key.name] = reconstructObject(property.value);
           }
+          return obj;
+        } else if (node.type === 'ArrayExpression') {
+          return node.elements.map(element => reconstructObject(element));
+        } else if (node.type === 'Literal') {
+          return node.value;
         }
-        
-        const nodes = reconstructObject(nodesDeclaration.declarations[0].init);
-        const edges = reconstructObject(edgesDeclaration.declarations[0].init);
+      }
+
+      const nodes = reconstructObject(nodesDeclaration.declarations[0].init);
+      const edges = reconstructObject(edgesDeclaration.declarations[0].init);
 
 
-        console.log("nodes", nodes);
-        console.log("edges", edges);
+      console.log("nodes", nodes);
+      console.log("edges", edges);
 
-        setNewNodes(nodes)
-        setNewEdges(edges)
-        
+      setNewNodes(nodes)
+      setNewEdges(edges)
+
+      setIsLoading(false)
+
     } catch (error) {
-        console.error('Error:', error);
+      console.error('Error:', error);
     }
-};
+  };
 
   return (
     <div
@@ -217,19 +128,9 @@ const [isLoading, setIsLoading] = useState(false)
           backgroundColor: "transparent",
         }}
       >
-        {/* <button
-          ref={buttonRef}
-          className="bg-transparent mt-3 ml-3 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          onClick={randomizeColor}
-          style={{ padding: "10px", fontSize: "20px" }}
-        >
-          Randomize Color
-        </button> */}
+
         <div className="flex flex-col" style={{ width: "300px" }}>
           <Input className="mt-3 ml-3" setInputText={setInputText} setIsHovered={setIsHovered} />
-          {/* <RandomButton /> */}
-          {/* Graph component */}
-
           <Lines
             backgroundColor={backgroundColor}
             randomizeColor={randomizeColor}
@@ -239,9 +140,7 @@ const [isLoading, setIsLoading] = useState(false)
           <div
             style={{
               position: "absolute",
-              // top: 100, // Adjust the top offset here
-              // left: 0,
-              // width: "80%",
+
               backgroundColor: "transparent",
               height: `calc(100% - 25%)`, // Adjust the offset and subtract from total height
               zIndex: 20,
@@ -254,8 +153,6 @@ const [isLoading, setIsLoading] = useState(false)
             // Pass required props to the Graph component
             style={
               {
-                // Adjust styles as needed
-                // width: "100%",
               }
             }
           />
