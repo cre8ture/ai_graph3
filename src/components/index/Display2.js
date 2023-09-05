@@ -139,7 +139,7 @@ const GraphWithPdfInputOverlay = ({
 
         <div className="flex flex-col" style={{ width: "300px" }}>
           <div className="flex">
-          <Input className="mt-3 ml-3" isLoading={isLoading} setInputText={setInputText} setIsHovered={setIsHovered} />
+          <Input className="mt-3 ml-3" isLoading={isLoading} setInputText={setInputText} setIsHovered={setIsHovered} handleSubmit={handleSubmit}/>
           </div>
           <Lines
             backgroundColor={backgroundColor}
@@ -161,6 +161,7 @@ const GraphWithPdfInputOverlay = ({
             backgroundColor={backgroundColor}
             newNodes={newNodes}
             newEdges={newEdges}
+            setToolTipWarning={setToolTipWarning}
             // Pass required props to the Graph component
             style={
               {

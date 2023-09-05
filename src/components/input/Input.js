@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
-const ScaledInput = ({ isLoading, setIsHovered, setInputText}) => {
+const ScaledInput = ({ isLoading, setIsHovered, setInputText, handleSubmit}) => {
   const [padding, setPadding] = useState("p-3");
   const [input, setInput] = useState('');
 
@@ -51,6 +51,7 @@ const ScaledInput = ({ isLoading, setIsHovered, setInputText}) => {
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           console.log("Enter key pressed");
+          handleSubmit();
         }
       }
     }

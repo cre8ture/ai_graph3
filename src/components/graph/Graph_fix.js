@@ -1,41 +1,8 @@
 import ResizeableNode from "./node_types/ResizeableNode";
 import ClickableNode from "./node_types/Clickable";
 import Project_node_norm from "./node_types/Clickable";
-
-
-
-const ininodes = [
-  {
-    id: '1',
-    type: 'Clickable',
-    data: {
-      label: 'key idea 1',
-      id: '1'
-    },
-    position: { x: 100, y: 100 },
-  },
-  // ...
-  {
-    id: 'n',
-    type: 'Clickable',
-    data: {
-      label: 'key idea n',
-      id: 'n'
-    },
-    position: { x:  3 * 100, y: 100 },
-  }
-];
-
-const iniedges = [
-  {
-    id: 'e1-2',
-    source: '1',
-    target: 'n',
-    label: 'describe the relationship between source "1" and target "2"'
-  },
-  
-];
-
+import {gpt3_expand_node} from '../brains/gpt3_expand_node'
+import {build_graph_from_output} from '../brains/build_graph_from_output'
 
 
 // import CustomControls from "./controls/Controls";
@@ -61,17 +28,62 @@ const nodeTypes = {
 
   Clickable: ClickableNode,
 
-  // Project_node_cool: Project_node_cool,
 };
 
 let id = 1;
 const getId = () => `${id++}`;
 
-const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdges }) => {
+const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdges, setToolTipWarning }) => {
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [flowStyle, setFlowStyle] = useState({ background: backgroundColor });
+  const [clickedNodeInfo, setClickedNodeInfo] = useState(null);
+  // const [toolTipWarning, setToolTipWarning]
+
+  // const onNodeClick = useCallback( async (event, node) => {
+  //   // Custom behavior goes here
+  //   console.log(`Node ${node.id} ${node.data.label} ${node.position.x} ${node.position.y} was MOOO -clicked`);
+  //   const response = await gpt3_expand_node(node.data.label, node.position.x, node.position.y,node.id)
+  //   console.log("response", response);  
+
+  //   // const data = await response.json();
+  //   // console.log(data);  
+  //   const graphData = await build_graph_from_output(response)
+
+  //   console.log("graphData", graphData)
+
+  //   setNodes((oldNodes) => [...oldNodes, ...graphData.nodes])
+  //   setEdges((oldEdges) => [...oldEdges, ...graphData.edges])
+  // }, []);
+
+  const onNodeClick = useCallback(async (event, node) => {
+    try {
+      // Custom behavior goes here
+      console.log(`Node ${node.id} ${node.data.label} ${node.position.x} ${node.position.y} was MOOO -clicked`);
+      const response = await gpt3_expand_node(node.data.label, node.position.x, node.position.y, node.id)
+      console.log("response", response);
+  
+      // const data = await response.json();
+      // console.log(data);  
+      const regex = /```javascript([\s\S]*?)```/g;
+const match = regex.exec(response);
+const code = match[1];
+
+console.log(code);
+      const graphData = await build_graph_from_output(code)
+  
+      console.log("graphData", graphData)
+  
+      setNodes((oldNodes) => [...oldNodes, ...graphData.nodes])
+      setEdges((oldEdges) => [...oldEdges, ...graphData.edges])
+    } catch (error) {
+      setToolTipWarning("error")
+      console.log("ERROR:" + error);
+    }
+  }, []);
+  
+  
 
   // console.log("backgroundColor", backgroundColor);
   useEffect(() => {
@@ -81,7 +93,7 @@ const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdge
   //   const onInit = (instance) => setReactFlowInstance(instance);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
+  
   useEffect(()=>{
     setNodes(newNodes)
     setEdges(newEdges)
@@ -125,6 +137,13 @@ const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdge
     [project]
   );
 
+  const handleSubmit = async function handleSubmit(newNods, newEdgs)
+  {
+    console.log('hola newNods, newEdgs ', newNods, newEdgs)
+    setNodes((nods) => [...nods, ...newNods])
+    setEdges((edgs) => [...edgs, ...newEdgs])
+
+  }
   //   for new new nodes being made
   const newNodeWidth = 100;
   const newNodeHeight = 100;
@@ -200,6 +219,10 @@ const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdge
         // style={rfStyle} // light blue background
         nodeTypes={nodeTypes}
         style={flowStyle}
+
+        // onNodeDoubleClick={onNodeDoubleClick}
+        onNodeClick={onNodeClick}
+
       >
         <Controls />
         <MiniMap />
@@ -210,10 +233,10 @@ const AddNodeOnEdgeDrop = ({ setIsClearGraph, backgroundColor, newNodes, newEdge
   );
 };
 
-const MyComponent = ({ backgroundColor, newNodes, newEdges }) => (
+const MyComponent = ({ backgroundColor, newNodes, newEdges,  setToolTipWarning}) => (
   <ReactFlowProvider newNodes={newNodes} newEdges={newEdges}>
     <div style={{ backgroundColor: "transparent" }}>
-      <AddNodeOnEdgeDrop backgroundColor={backgroundColor}  newNodes={newNodes} newEdges={newEdges} />
+      <AddNodeOnEdgeDrop backgroundColor={backgroundColor} setToolTipWarning={setToolTipWarning}  newNodes={newNodes} newEdges={newEdges} />
     </div>
   </ReactFlowProvider>
 );

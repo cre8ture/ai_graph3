@@ -186,7 +186,6 @@ const rotateSquare = () => {
 // >
 //   <Loading />
 // </foreignObject>
-
 <Polygon
 // className={`polygon polygon-${iS} rotate-continuous polygonMoo`}
 className={`polygon-${i} rotate-continuous polygonMoo`}
@@ -204,7 +203,6 @@ style={{
   pointerEvents: showLoading ? "none" : "auto", // Disable mouse events when loading
 }}
 />
-
            )
             )}
             
@@ -227,13 +225,11 @@ animation-fill-mode: forwards;
 }
 
 
-.polygonMoo.rotate-continuous {
-  animation-name: rotate-full;
-  animation-duration: 3s; 
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-}
-
+  .polygonMoo.rotate-continuous {
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+  }
   
   
 
@@ -254,16 +250,6 @@ to {
 transform: rotate(0deg);
 }
 }
-
-
-@keyframes rotate-full {
-  from {
-  transform: rotate(360deg);
-  }
-  to {
-  transform: rotate(0deg);
-  }
-  }
 `}
       </style>
     </div>
